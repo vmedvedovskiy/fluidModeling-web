@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="alglibnet2">
+      <HintPath>..\Assemblies\alglibnet2.dll</HintPath>
+    </Reference>
+    <Reference Include="FuncLib">
+      <HintPath>..\Assemblies\FuncLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
