@@ -3,9 +3,9 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using CoreApi.Service;
+    using CoreApi.Services;
 
-    public class SphereIdealFluidProblemSolver : ISphereIdealFluidProblemSolver
+    public class SphereIdealFluidFlowProblemSolver : IFlowProblemSolver
     {
         public async Task<double[]> Solve(double M, int coordFunctionsCount, double cylinderRadius, double sphereRadius, double speedAtInfinity)
         {
