@@ -33,7 +33,7 @@
 
             configuration.Routes.MapHttpRoute(
                 name: "GetPoints",
-                routeTemplate: "api/{controller}/{action}",
+                routeTemplate: "api/sphere/points",
                 defaults: new { 
                     controller = "IdealFluidSphereController", 
                     action = "GetPoints" },
@@ -42,7 +42,7 @@
 
             configuration.Routes.MapHttpRoute(
                 name: "GetCoefficients",
-                routeTemplate: "api/{controller}/{action}",
+                routeTemplate: "api/sphere/coefficients",
                 defaults: new
                 {
                     controller = "IdealFluidSphereController",
