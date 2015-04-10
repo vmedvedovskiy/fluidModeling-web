@@ -25,18 +25,15 @@
 
             // Configure Web API for self-host. 
             HttpConfiguration configuration = new HttpConfiguration();
-            configuration.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
 
             configuration.Routes.MapHttpRoute(
                 name: "GetPoints",
                 routeTemplate: "api/sphere/points",
-                defaults: new { 
-                    controller = "IdealFluidSphereController", 
-                    action = "GetPoints" },
+                defaults: new
+                {
+                    controller = "IdealFluidSphere",
+                    action = "GetPoints"
+                },
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) }
             );
 
@@ -45,10 +42,16 @@
                 routeTemplate: "api/sphere/coefficients",
                 defaults: new
                 {
-                    controller = "IdealFluidSphereController",
+                    controller = "IdealFluidSphere",
                     action = "GetCoefficients"
                 },
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) }
+            );
+
+            configuration.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
 
             var json = configuration.Formatters.JsonFormatter;
