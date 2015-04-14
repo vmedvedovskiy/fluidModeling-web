@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GaussIntegrationService.cs" />
+    <Compile Include="MemoryCoordinateFunctionsStore.cs" />
     <Compile Include="SphereIdealFluidFlowFunctionPointGenerator.cs" />
     <Compile Include="SphereIdealFluidFlowProblemSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

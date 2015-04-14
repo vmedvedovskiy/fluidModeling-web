@@ -11,11 +11,13 @@
     {
         private Variable x;
         private Variable y;
+        private readonly ICoordinateFunctionsStore coordinateFunctions;
 
-        public SphereIdealFluidFlowFunctionPointGenerator()
+        public SphereIdealFluidFlowFunctionPointGenerator(ICoordinateFunctionsStore coordinateFunctions)
         {
             this.x = new Variable();
             this.y = new Variable();
+            this.coordinateFunctions = coordinateFunctions;
         }
 
         public async Task<IEnumerable<Services.Point>> Generate(double[] coefficients, double step, Boundary xBounds, Boundary yBounds)
@@ -29,7 +31,7 @@
                     .Select(t => Tuple.Create<int, int>(t, x - t)))
                 .ToList();
 
-            var function = indexes.Select((x, i) => coefficients[i] * this.GetCoordinateFunction(x.Item1, x.Item2))
+            var function = indexes.Select((x, i) => coefficients[i] * this.coordinateFunctions.Get(x.Item1, x.Item2, this.x, this.y))
                 .ToList()
                 .Aggregate<Function>((sum, f) => sum + f);
 
@@ -78,11 +80,6 @@
 
                     return result;
                 });
-        }
-
-        private Function GetCoordinateFunction(int i, int j)
-        {
-            return Function.Pow(x, i) * Function.Pow(y, j);
         }
     }
 }

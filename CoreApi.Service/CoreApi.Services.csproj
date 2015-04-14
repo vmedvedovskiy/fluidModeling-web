@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boundary.cs" />
+    <Compile Include="ICoordinateFunctionsStore.cs" />
     <Compile Include="IFlowFunctionPointGenerator.cs" />
     <Compile Include="IFlowProblemSolver.cs" />
     <Compile Include="IIntegrationService.cs" />
