@@ -21,7 +21,7 @@
         public async Task<IEnumerable<Services.Point>> Generate(double[] coefficients, double step, Boundary xBounds, Boundary yBounds)
         {
             IList<Function> functions = new List<Function>();
-            // solve x(x +1)/2 = coefficients.Length 
+            // obtained by solving equation: x(x +1)/2 = coefficients.Length 
             var coeffCount = (int)(Math.Sqrt(8 * coefficients.Length + 1) - 1) / 2;
 
             var indexes = Enumerable.Range(0, coeffCount)
@@ -35,24 +35,27 @@
 
             var xPoints = await GetEvaluationPoints(step, xBounds);
             var yPoints = await GetEvaluationPoints(step, yBounds);
+            var result = new List<Services.Point>();
 
-            // reserve memory for all points to avoid resizes
-            IList<Services.Point> result = new List<Services.Point>(xPoints.Count() * yPoints.Count());
-
-            Parallel.For(0, yPoints.Count(), async (i) =>
+            for (int i = 0; i < yPoints.Count(); ++i)
             {
-                Parallel.For(0, xPoints.Count(), (j) =>
+                List<Services.Point> inner = new List<Services.Point>();
+                for (int j = 0; j < xPoints.Count(); ++j)
                 {
-                    result.Add(new Services.Point()
+                    inner.Add(new Services.Point()
                     {
                         X = xPoints[j],
                         Y = yPoints[i],
                         Z = function.Value(this.x | xPoints[j], this.y | yPoints[i])
                     });
-                });
-            });
+                }
+
+                result.AddRange(inner);
+            }
 
             return result;
+
+            return null;
         }
 
         private static Task<double[]> GetEvaluationPoints(double step, Boundary xBounds)
@@ -61,9 +64,16 @@
                 {
                     var count = (long)Math.Floor(xBounds.High / step) + 1;
                     var result = new double[count];
-                    Parallel.For(0, count, (i) =>
+
+                    int degreeOfParallelism = Environment.ProcessorCount;
+
+                    Parallel.For(0, degreeOfParallelism, workerId =>
                     {
-                        result[i] = xBounds.Low + i * step;
+                        var max = result.Length * (workerId + 1) / degreeOfParallelism;
+                        for (int i = result.Length * workerId / degreeOfParallelism; i < max; i++)
+                        {
+                            result[i] = xBounds.Low + i * step;
+                        }
                     });
 
                     return result;
