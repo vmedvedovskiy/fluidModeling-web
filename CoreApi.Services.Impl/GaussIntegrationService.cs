@@ -45,11 +45,24 @@
                     double transformedY = 0.5 * ySum + 0.5 * yDiff * nodes[j];
                     double currentSum = weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
 
-                    Interlocked.Add(total, currentSum)
+                    Add(ref total, currentSum);
                 });
             });
 
             return total * 0.5 * xDiff * 0.5 * yDiff;
+        }
+
+        private static double Add(ref double location1, double value)
+        {
+            double newCurrentValue = 0;
+            while (true)
+            {
+                double currentValue = newCurrentValue;
+                double newValue = currentValue + value;
+                newCurrentValue = Interlocked.CompareExchange(ref location1, newValue, currentValue);
+                if (newCurrentValue == currentValue)
+                    return newValue;
+            }
         }
 
         private void RefreshCoefficients(int nodesCount)
