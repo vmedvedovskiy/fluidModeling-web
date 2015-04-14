@@ -47,6 +47,7 @@
                     double transformedY = 0.5 * ySum + 0.5 * yDiff * nodes[j];
 
                     currentSum += weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
+                    Volatile.Write(ref total, currentSum);
                 });
             });
 
