@@ -45,6 +45,7 @@
     <Compile Include="Boundary.cs" />
     <Compile Include="IFlowFunctionPointGenerator.cs" />
     <Compile Include="IFlowProblemSolver.cs" />
+    <Compile Include="IIntegrationService.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
