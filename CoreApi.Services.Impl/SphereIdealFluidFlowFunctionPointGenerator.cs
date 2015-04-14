@@ -37,29 +37,20 @@
             var yPoints = await GetEvaluationPoints(step, yBounds);
 
             // reserve memory for all points to avoid resizes
-            IEnumerable<Services.Point> result = new List<Services.Point>(xPoints.Count() * yPoints.Count());
+            IList<Services.Point> result = new List<Services.Point>(xPoints.Count() * yPoints.Count());
 
-            for(var i = 0; i < yPoints.Count(); ++i)
+            Parallel.For(0, yPoints.Count(), async (i) =>
             {
-                // calculate each row in separate task
-                var row = await Task.Factory.StartNew<IEnumerable<Services.Point>>(() =>
+                Parallel.For(0, xPoints.Count(), (j) =>
                 {
-                    IList<Services.Point> inner = new List<Services.Point>(xPoints.Count());
-                    for(var j = 0; j < xPoints.Count(); ++j)
+                    result.Add(new Services.Point()
                     {
-                        inner.Add(new Services.Point()
-                        {
-                            X = xPoints[j],
-                            Y = yPoints[i],
-                            Z = function.Value(this.x | xPoints[j], this.y | yPoints[i])                           
-                        });
-                    }
-
-                    return inner;
+                        X = xPoints[j],
+                        Y = yPoints[i],
+                        Z = function.Value(this.x | xPoints[j], this.y | yPoints[i])
+                    });
                 });
-
-                result = result.Concat(row);
-            }
+            });
 
             return result;
         }
@@ -67,16 +58,16 @@
         private static Task<double[]> GetEvaluationPoints(double step, Boundary xBounds)
         {
             return Task.Factory.StartNew<double[]>(() =>
-            {
-                var count = (long)Math.Floor(xBounds.High / step) + 1;
-                var result = new double[count];
-                for (var i = 0; i < count; ++i)
                 {
-                    result[i] = xBounds.Low + i * step;
-                }
+                    var count = (long)Math.Floor(xBounds.High / step) + 1;
+                    var result = new double[count];
+                    Parallel.For(0, count, (i) =>
+                    {
+                        result[i] = xBounds.Low + i * step;
+                    });
 
-                return result;
-            });
+                    return result;
+                });
         }
 
         private Function GetCoordinateFunction(int i, int j)
