@@ -1,21 +1,75 @@
 ﻿namespace CoreApi.Services.Impl
 {
     using FuncLib.Functions;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class GaussIntegrationService : IIntegrationService
     {
-        private static double[] T = { -0.998866, -0.994032, -0.985354, -0.972864, -0.956611, -0.936657, -0.913079, -0.885968, -0.85543, -0.821582, -0.784556, -0.744494, -0.701552, -0.655896, -0.607703, -0.557158, -0.504458, -0.449806, -0.393414, -0.3355, -0.276288, -0.216007, -0.154891, -0.0931747, -0.0310983, 0.0310983, 0.0931747, 0.154891, 0.216007, 0.276288, 0.3355, 0.393414, 0.449806, 0.504458, 0.557158, 0.607703, 0.655896, 0.701552, 0.744494, 0.784556, 0.821582, 0.85543, 0.885968, 0.913079, 0.936657, 0.956611, 0.972864, 0.985354, 0.994032, 0.998866 };
-        private static double[] CG = { 0.00290862, 0.0067598, 0.0105905, 0.0143808, 0.0181156, 0.0217802, 0.0253607, 0.028843, 0.0322137, 0.0354598, 0.0385688, 0.0415285, 0.0443275, 0.0469551, 0.0494009, 0.0516557, 0.0537106, 0.0555577, 0.0571899, 0.0586008, 0.0597851, 0.060738, 0.0614559, 0.0619361, 0.0621766, 0.0621766, 0.0619361, 0.0614559, 0.060738, 0.0597851, 0.0586008, 0.0571899, 0.0555577, 0.0537106, 0.0516557, 0.0494009, 0.0469551, 0.0443275, 0.0415285, 0.0385688, 0.0354598, 0.0322137, 0.028843, 0.0253607, 0.0217802, 0.0181156, 0.0143808, 0.0105905, 0.0067598, 0.00290862 };
+        /// <summary>
+        /// <precision, <T - nodes, CG - weights>>
+        /// </summary>
+        private ConcurrentDictionary<int, Tuple<double[], double[]>> coefficientsCache;
 
-        public double Integrate(Function func, int precision)
+        public GaussIntegrationService()
         {
-            return 0;
+            this.coefficientsCache = new ConcurrentDictionary<int, Tuple<double[], double[]>>();
         }
 
-        private void RefreshCoefficients(int n)
+        public double Integrate(Function f, int nodesCount, Variable x, Variable y, 
+            Boundary xBounds, Boundary yBounds)
+        {
+            this.RefreshCoefficients(nodesCount);
+            Tuple<double[], double[]> coefficients;
+            // TODO add concurrence cheks
+            this.coefficientsCache.TryGetValue(nodesCount, out coefficients);
+            var weights = coefficients.Item2;
+            var nodes = coefficients.Item1;
+
+            // cache this values for linear transform of gauss coefficients and nodes
+            var xDiff = xBounds.High - xBounds.Low;
+            var xSum = xBounds.High + xBounds.Low;
+
+            var yDiff = yBounds.High - yBounds.Low;
+            var ySum = yBounds.High + yBounds.Low;
+
+            double total = 0;
+
+            Parallel.For(0, nodesCount, (i) =>
+            {
+                Parallel.For(0, nodesCount, (j) =>
+                {
+                    double currentSum = Volatile.Read(ref total);
+                    double transformedX = 0.5 * xSum + 0.5 * xDiff * nodes[i];
+                    double transformedY = 0.5 * ySum + 0.5 * yDiff * nodes[j];
+
+                    currentSum += weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
+                });
+            });
+
+            return total * 0.5 * xDiff * 0.5 * yDiff;
+        }
+
+        private void RefreshCoefficients(int nodesCount)
         {
             int info;
-            alglib.gqgenerategausslegendre(n, out info, out T, out CG);
+            if (this.coefficientsCache.ContainsKey(nodesCount))
+            {
+                return;
+            }
+            else
+            {
+                double[] T = new double[nodesCount];
+                double[] CG = new double[nodesCount];
+
+                alglib.gqgenerategausslegendre(nodesCount, out info, out T, out CG);
+                var newCoefficients = Tuple.Create<double[], double[]>(T, CG);
+                // just replae value
+                this.coefficientsCache.AddOrUpdate(nodesCount, newCoefficients, (key, old) => old);
+            }
         }
     }
 }
