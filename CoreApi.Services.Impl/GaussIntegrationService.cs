@@ -3,7 +3,6 @@
     using FuncLib.Functions;
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@
         {
             this.RefreshCoefficients(nodesCount);
             Tuple<double[], double[]> coefficients;
-            // TODO add concurrence cheks
+            // TODO add concurrency checks
             this.coefficientsCache.TryGetValue(nodesCount, out coefficients);
             var weights = coefficients.Item2;
             var nodes = coefficients.Item1;
@@ -42,12 +41,11 @@
             {
                 Parallel.For(0, nodesCount, (j) =>
                 {
-                    double currentSum = Volatile.Read(ref total);
                     double transformedX = 0.5 * xSum + 0.5 * xDiff * nodes[i];
                     double transformedY = 0.5 * ySum + 0.5 * yDiff * nodes[j];
+                    double currentSum = weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
 
-                    currentSum += weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
-                    Volatile.Write(ref total, currentSum);
+                    Interlocked.Add(total, currentSum)
                 });
             });
 
