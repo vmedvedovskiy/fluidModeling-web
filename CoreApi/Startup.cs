@@ -22,8 +22,8 @@
 
             container.RegisterWebApiRequest<IFlowProblemSolver, SphereIdealFluidFlowProblemSolver>();
             container.RegisterWebApiRequest<IFlowFunctionPointGenerator, SphereIdealFluidFlowFunctionPointGenerator>();
-            container.RegisterWebApiRequest<IIntegrationService, GaussIntegrationService>();
-            container.RegisterWebApiRequest<ICoordinateFunctionsStore, MemoryCoordinateFunctionsStore>();
+            container.RegisterSingle<IIntegrationService, GaussIntegrationService>();
+            container.RegisterSingle<ICoordinateFunctionsStore, MemoryCoordinateFunctionsStore>();
 
             // Configure Web API for self-host. 
             HttpConfiguration configuration = new HttpConfiguration();

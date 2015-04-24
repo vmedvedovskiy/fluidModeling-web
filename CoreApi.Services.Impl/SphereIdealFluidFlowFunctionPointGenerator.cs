@@ -20,20 +20,20 @@
             this.coordinateFunctions = coordinateFunctions;
         }
 
-        public async Task<IEnumerable<Services.Point>> Generate(double[] coefficients, double step, Boundary xBounds, Boundary yBounds)
+        public async Task<IEnumerable<Services.Point>> Generate(double step, Boundary xBounds, Boundary yBounds, Function f)
         {
             IList<Function> functions = new List<Function>();
-            // obtained by solving equation: x(x +1)/2 = coefficients.Length 
-            var coeffCount = (int)(Math.Sqrt(8 * coefficients.Length + 1) - 1) / 2;
+            //// obtained by solving equation: x(x +1)/2 = coefficients.Length 
+            //var coeffCount = (int)(Math.Sqrt(8 * coefficients.Length + 1) - 1) / 2;
 
-            var indexes = Enumerable.Range(0, coeffCount)
-                .SelectMany(x => Enumerable.Range(0, x + 1)
-                    .Select(t => Tuple.Create<int, int>(t, x - t)))
-                .ToList();
+            //var indexes = Enumerable.Range(0, coeffCount)
+            //    .SelectMany(x => Enumerable.Range(0, x + 1)
+            //        .Select(t => Tuple.Create<int, int>(t, x - t)))
+            //    .ToList();
 
-            var function = indexes.Select((x, i) => coefficients[i] * this.coordinateFunctions.Get(x.Item1, x.Item2, this.x, this.y))
-                .ToList()
-                .Aggregate<Function>((sum, f) => sum + f);
+            //var function = omega * indexes.Select((x, i) => coefficients[i] * this.coordinateFunctions.Get(x.Item1, x.Item2, this.x, this.y))
+            //    .ToList()
+            //    .Aggregate<Function>((sum, f) => sum + f);
 
             var xPoints = await GetEvaluationPoints(step, xBounds);
             var yPoints = await GetEvaluationPoints(step, yBounds);
@@ -48,7 +48,7 @@
                     {
                         X = xPoints[j],
                         Y = yPoints[i],
-                        Z = function.Value(this.x | xPoints[j], this.y | yPoints[i])
+                        Z = f.Value(this.x | xPoints[j], this.y | yPoints[i])
                     });
                 }
 

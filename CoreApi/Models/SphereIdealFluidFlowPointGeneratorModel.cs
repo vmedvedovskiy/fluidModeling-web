@@ -2,10 +2,8 @@
 {
     using CoreApi.Services;
 
-    public class SphereIdealFluidFlowPointGeneratorModel
+    public class SphereIdealFluidFlowPointGeneratorModel : IdealFluidSphereModel
     {
-        public double[] Coefficients { get; set; }
-
         public double Step { get; set; }
 
         public Boundary XBounds { get; set; }
