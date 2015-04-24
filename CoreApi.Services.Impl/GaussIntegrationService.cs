@@ -18,7 +18,7 @@
             this.coefficientsCache = new ConcurrentDictionary<int, Tuple<double[], double[]>>();
         }
 
-        public double Integrate(Function f, int nodesCount, Variable x, Variable y, 
+        public async Task<double> Integrate(Function f, int nodesCount, TransformableVariable x, TransformableVariable y, 
             Boundary xBounds, Boundary yBounds)
         {
             this.RefreshCoefficients(nodesCount);
@@ -37,17 +37,19 @@
 
             double total = 0;
 
-            Parallel.For(0, nodesCount, (i) =>
+            for (int i = 0; i < nodesCount; ++i)
             {
-                Parallel.For(0, nodesCount, (j) =>
+                for (int j = 0; j < nodesCount; ++j)
                 {
                     double transformedX = 0.5 * xSum + 0.5 * xDiff * nodes[i];
                     double transformedY = 0.5 * ySum + 0.5 * yDiff * nodes[j];
-                    double currentSum = weights[i] * weights[j] * f.Value(x | transformedX, y | transformedY);
+                    double currentSum = weights[i] * weights[j] 
+                        * f.Value(x | x.Rule(transformedX, transformedY),
+                        y | y.Rule(transformedX, transformedY));
 
                     Add(ref total, currentSum);
-                });
-            });
+                }
+            }
 
             return total * 0.5 * xDiff * 0.5 * yDiff;
         }

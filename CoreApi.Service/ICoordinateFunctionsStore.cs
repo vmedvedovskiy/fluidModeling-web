@@ -1,12 +1,13 @@
 ﻿namespace CoreApi.Services
 {
     using FuncLib.Functions;
+    using System;
     using System.Collections.Generic;
 
     public interface ICoordinateFunctionsStore
     {
-        IList<Function> Get(int count, Variable x, Variable y);
+        IList<Func<Variable, Variable, Function>> Get(int count);
 
-        Function Get(int xIndex, int yIndex, Variable x, Variable y);
+        Func<Variable, Variable, Function> Get(int xIndex, int yIndex);
     }
 }

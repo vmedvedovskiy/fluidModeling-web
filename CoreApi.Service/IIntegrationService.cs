@@ -1,6 +1,7 @@
 ﻿namespace CoreApi.Services
 {
     using FuncLib.Functions;
+    using System.Threading.Tasks;
 
     public interface IIntegrationService
     {
@@ -15,7 +16,7 @@
         /// <param name="xBounds">Integration bounds for x</param>
         /// <param name="yBounds">Integration bounds for y</param>
         /// <returns></returns>
-        double Integrate(Function f, int nodesCount, Variable x, Variable y,
+        Task<double> Integrate(Function f, int nodesCount, TransformableVariable x, TransformableVariable y,
             Boundary xBounds, Boundary yBounds);
     }
 }

@@ -7,6 +7,7 @@
     using System.Collections.Concurrent;
     using System.Threading.Tasks;
 
+    // TODO: Rename to more generic name
     public class SphereIdealFluidFlowFunctionPointGenerator : IFlowFunctionPointGenerator
     {
         private Variable x;
