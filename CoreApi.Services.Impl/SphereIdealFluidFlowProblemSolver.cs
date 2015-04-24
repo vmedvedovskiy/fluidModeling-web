@@ -98,16 +98,18 @@
             {
                 for (int j = 0; j < coordFunctionsCount; ++j)
                 {
-                    var integrand = A(coordFunctions[(int)i](x, y), x, y) * coordFunctions[(int)j](x, y);
+                    var cylinderPart = A(coordFunctions[(int)i](x, y), x, y) * coordFunctions[(int)j](x, y);
+
+                    var spherePart = A(coordFunctions[(int)i](ro, phi), ro, phi) * coordFunctions[(int)j](ro, phi);
 
                     matrix[(int)i, (int)j] = await integrationService.Integrate(
-                        integrand, 10, x, y, xBounds, yBounds) -
-                        await integrationService.Integrate(integrand, 10, ro, phi, roBounds, phiBounds);
+                        cylinderPart, 10, x, y, xBounds, yBounds) -
+                        await integrationService.Integrate(
+                        spherePart, 10, ro, phi, roBounds, phiBounds);
                 }
             }
 
-            double[] rightPart = Enumerable.Repeat(0, coordFunctions.Count)
-                .Cast<double>()
+            double[] rightPart = Enumerable.Repeat<double>(0, coordFunctions.Count)
                 .ToArray<double>();
 
             int info;
