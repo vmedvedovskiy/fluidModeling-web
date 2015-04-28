@@ -6,6 +6,7 @@
 
     public interface IFlowFunctionPointGenerator
     {
-        Task<IEnumerable<Point>> Generate(double step, Boundary xBounds, Boundary yBounds, Function f);
+        Task<IEnumerable<Point>> Generate(double step, Boundary xBounds, Boundary yBounds, 
+            Function f, Variable x, Variable y);
     }
 }

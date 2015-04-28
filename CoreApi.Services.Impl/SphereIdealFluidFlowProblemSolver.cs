@@ -19,7 +19,7 @@
             this.coordinateFunctions = coordinateFunctions;
         }
 
-        public async Task<Function> Solve(double M, int n, double cylinderRadius,
+        public async Task<Tuple<Function, Variable, Variable>> Solve(double M, int n, double cylinderRadius,
             double sphereRadius, double speedAtInfinity)
         {
 
@@ -28,8 +28,8 @@
 
             #region Variables
 
-            var x = new TransformableVariable(0);
-            var y = new TransformableVariable(1);
+            var rr = new TransformableVariable(0);
+            var zz = new TransformableVariable(1);
 
             var ro = new TransformableVariable(0, (a, b) =>
                 Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2)));
@@ -82,8 +82,8 @@
                 (Variable r, Variable z, double c) => c * omega1(r, z)
                     / (omega1(r, z) + X(r, z) * omega2(r, z));
 
-            Func<Function, double[], Variable, Variable, Function> result =
-                (Function f, double[] coeff, Variable r, Variable z) =>
+            Func<double[], Variable, Variable, Function> result =
+                (double[] coeff, Variable r, Variable z) =>
                 {
                     return omega(r, z) * coeff.Select((c, i) => c * coordFunctions[i](r, z))
                         .ToList()
@@ -97,21 +97,21 @@
 
             for (int i = 0; i < coordFunctionsCount; ++i)
             {
-                var right = A(F0(x, y, cylinderRadius), x, y) * coordFunctions[(int)i](x, y);
+                var right = A(F0(rr, zz, cylinderRadius), rr, zz) * coordFunctions[(int)i](rr, zz);
 
                 for (int j = 0; j < coordFunctionsCount; ++j)
                 {
-                    var cylinderPart = A(coordFunctions[(int)i](x, y), x, y) * coordFunctions[(int)j](x, y);
+                    var cylinderPart = A(coordFunctions[(int)i](rr, zz), rr, zz) * coordFunctions[(int)j](rr, zz);
 
                     var spherePart = A(coordFunctions[(int)i](ro, phi), ro, phi) * coordFunctions[(int)j](ro, phi);
 
                     matrix[(int)i, (int)j] = await integrationService.Integrate(
-                        cylinderPart, 10, x, y, xBounds, yBounds)
+                        cylinderPart, 50, rr, zz, xBounds, yBounds)
                          - await integrationService.Integrate(
-                        spherePart, 10, ro, phi, roBounds, phiBounds);
+                        spherePart, 50, ro, phi, roBounds, phiBounds);
                 }
 
-                rightPart[i] = await integrationService.Integrate(right, 10, x, y, xBounds, yBounds);
+                rightPart[i] = await integrationService.Integrate(right, 10, rr, zz, xBounds, yBounds);
             }
 
 
@@ -121,7 +121,7 @@
 
             alglib.rmatrixsolve(matrix, coordFunctionsCount, rightPart, out info, out report, out coefficients);
 
-            return null;
+            return Tuple.Create(result(coefficients, rr, zz), rr as Variable, zz as Variable);
         }
     }
 }

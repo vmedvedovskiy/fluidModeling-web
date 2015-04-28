@@ -10,18 +10,15 @@
     // TODO: Rename to more generic name
     public class SphereIdealFluidFlowFunctionPointGenerator : IFlowFunctionPointGenerator
     {
-        private Variable x;
-        private Variable y;
         private readonly ICoordinateFunctionsStore coordinateFunctions;
 
         public SphereIdealFluidFlowFunctionPointGenerator(ICoordinateFunctionsStore coordinateFunctions)
         {
-            this.x = new Variable();
-            this.y = new Variable();
             this.coordinateFunctions = coordinateFunctions;
         }
 
-        public async Task<IEnumerable<Services.Point>> Generate(double step, Boundary xBounds, Boundary yBounds, Function f)
+        public async Task<IEnumerable<Services.Point>> Generate(double step, Boundary xBounds, Boundary yBounds, 
+            Function f, Variable x, Variable y)
         {
             IList<Function> functions = new List<Function>();
             //// obtained by solving equation: x(x +1)/2 = coefficients.Length 
@@ -49,7 +46,7 @@
                     {
                         X = xPoints[j],
                         Y = yPoints[i],
-                        Z = f.Value(this.x | xPoints[j], this.y | yPoints[i])
+                        Z = f.Value(x | xPoints[j], y | yPoints[i])
                     });
                 }
 
