@@ -11,7 +11,7 @@
         public IList<Func<Variable, Variable, Function>> Get(int count)
         {
             // TODO move this to helper function
-            var indexes = Enumerable.Range(0, count + 1)
+            var indexes = Enumerable.Range(1, count + 1)
                 .SelectMany(z => Enumerable.Range(0, z + 1)
                     .Select(t => Tuple.Create<int, int>(t, z - t)))
                 .ToList();

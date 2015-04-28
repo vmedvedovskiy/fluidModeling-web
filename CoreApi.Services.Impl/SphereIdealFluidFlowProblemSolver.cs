@@ -60,7 +60,7 @@
 
             Func<Function, Variable, Variable, Function> A =
                     (Function f, Variable r, Variable z) => (-1 / r) *
-                    f.Derivative(z, 2) - ((1 / r) * f.Derivative(r)).Derivative(r);
+                    f.Derivative(z, 2) - (((1 / r) * f.Derivative(r)).Derivative(r));
 
             Func<Variable, Variable, Function> omega1 =
                 (Variable r, Variable z) => Function.Pow(r, 2)
@@ -93,9 +93,12 @@
             #endregion
 
             var matrix = new double[coordFunctionsCount, coordFunctionsCount];
+            var rightPart = new double[coordFunctionsCount];
 
             for (int i = 0; i < coordFunctionsCount; ++i)
             {
+                var right = A(F0(x, y, cylinderRadius), x, y) * coordFunctions[(int)i](x, y);
+
                 for (int j = 0; j < coordFunctionsCount; ++j)
                 {
                     var cylinderPart = A(coordFunctions[(int)i](x, y), x, y) * coordFunctions[(int)j](x, y);
@@ -103,14 +106,14 @@
                     var spherePart = A(coordFunctions[(int)i](ro, phi), ro, phi) * coordFunctions[(int)j](ro, phi);
 
                     matrix[(int)i, (int)j] = await integrationService.Integrate(
-                        cylinderPart, 10, x, y, xBounds, yBounds) -
-                        await integrationService.Integrate(
+                        cylinderPart, 10, x, y, xBounds, yBounds)
+                         - await integrationService.Integrate(
                         spherePart, 10, ro, phi, roBounds, phiBounds);
                 }
+
+                rightPart[i] = await integrationService.Integrate(right, 10, x, y, xBounds, yBounds);
             }
 
-            double[] rightPart = Enumerable.Repeat<double>(0, coordFunctions.Count)
-                .ToArray<double>();
 
             int info;
             double[] coefficients;
