@@ -106,9 +106,9 @@
                     var spherePart = A(coordFunctions[(int)i](ro, phi), ro, phi) * coordFunctions[(int)j](ro, phi);
 
                     matrix[(int)i, (int)j] = await integrationService.Integrate(
-                        cylinderPart, 50, rr, zz, xBounds, yBounds)
+                        cylinderPart, 10, rr, zz, xBounds, yBounds)
                          - await integrationService.Integrate(
-                        spherePart, 50, ro, phi, roBounds, phiBounds);
+                        spherePart, 10, ro, phi, roBounds, phiBounds);
                 }
 
                 rightPart[i] = await integrationService.Integrate(right, 10, rr, zz, xBounds, yBounds);

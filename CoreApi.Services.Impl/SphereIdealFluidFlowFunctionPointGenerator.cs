@@ -62,19 +62,13 @@
         {
             return Task.Factory.StartNew<double[]>(() =>
                 {
-                    var count = (long)Math.Floor(xBounds.High / step) + 1;
+                    var count = (long)Math.Floor((xBounds.High - xBounds.Low) / step) + 1;
                     var result = new double[count];
-
-                    int degreeOfParallelism = Environment.ProcessorCount;
-
-                    Parallel.For(0, degreeOfParallelism, workerId =>
+                    var max = result.Length;
+                    for (int i = 0; i < count; i++)
                     {
-                        var max = result.Length * (workerId + 1) / degreeOfParallelism;
-                        for (int i = result.Length * workerId / degreeOfParallelism; i < max; i++)
-                        {
-                            result[i] = xBounds.Low + i * step;
-                        }
-                    });
+                        result[i] = xBounds.Low + i * step;
+                    }
 
                     return result;
                 });

@@ -36,22 +36,20 @@
                     data.addRow([result[i].X, result[i].Y, result[i].Z]);
                 }
 
-                // create some nice looking data with sin/cos
-                var steps = 25;  // number of datapoints will be steps*steps
-                var axisMax = 314;
-                axisStep = axisMax / steps;
-
-
                 // specify options
                 options = {
-                    width: "400px",
-                    height: "400px",
+                    width: "100%",
+                    height: "800px",
                     style: "surface",
                     showPerspective: true,
                     showGrid: true,
                     showShadow: false,
                     keepAspectRatio: true,
-                    verticalRatio: 0.5
+                    verticalRatio: 0.5,
+                    xMax: 2,
+                    xMin: -2,
+                    yMax: 1,
+                    yMin: -1
                 };
 
                 // Instantiate our graph object.
