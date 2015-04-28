@@ -22,8 +22,8 @@
             data: JSON.stringify({
                 step: 0.05,
                 xBounds: {
-                    low: -2,
-                    high: 2
+                    low: -1,
+                    high: 1
                 },
                 yBounds: {
                     low: -1,
@@ -46,8 +46,8 @@
                     showShadow: false,
                     keepAspectRatio: true,
                     verticalRatio: 0.5,
-                    xMax: 2,
-                    xMin: -2,
+                    xMax: 1,
+                    xMin: -1,
                     yMax: 1,
                     yMin: -1
                 };
