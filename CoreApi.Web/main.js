@@ -26,7 +26,7 @@
                     high: 1
                 },
                 yBounds: {
-                    low: -1,
+                    low: 0,
                     high: 1
                 }
             }),
@@ -49,7 +49,7 @@
                     xMax: 1,
                     xMin: -1,
                     yMax: 1,
-                    yMin: -1
+                    yMin: 0
                 };
 
                 // Instantiate our graph object.
