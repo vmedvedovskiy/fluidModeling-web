@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreApi.Services", "CoreApi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreApi.Services.Impl", "CoreApi.Services.Impl\CoreApi.Services.Impl.csproj", "{2C90D0DF-AB40-4559-8B6E-404E053FE83E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreApi.Web", "CoreApi.Web\CoreApi.Web.csproj", "{28195491-C8E5-42C8-B1F4-C4FEEC8D065E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2C90D0DF-AB40-4559-8B6E-404E053FE83E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C90D0DF-AB40-4559-8B6E-404E053FE83E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C90D0DF-AB40-4559-8B6E-404E053FE83E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28195491-C8E5-42C8-B1F4-C4FEEC8D065E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28195491-C8E5-42C8-B1F4-C4FEEC8D065E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28195491-C8E5-42C8-B1F4-C4FEEC8D065E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28195491-C8E5-42C8-B1F4-C4FEEC8D065E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
