@@ -41,7 +41,23 @@
                 model.CylinderRadius, model.SphereRadius, model.SpeedAtInfinity);
 
             return new PointsActionResult(await this.pointGenerator.Generate(model.Step, model.XBounds, model.YBounds, 
-                result.Item1, result.Item2, result.Item3));
+                result.Item1, result.Item3, result.Item2));
         }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<IHttpActionResult> GetContourPoints([FromBody]SphereIdealFluidFlowPointGeneratorModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var result = await this.solver.Solve(model.M, model.CoordFunctionsCount,
+        //        model.CylinderRadius, model.SphereRadius, model.SpeedAtInfinity);
+
+        //    return new PointsActionResult(await this.pointGenerator.GenerateContour(model.Step, model.XBounds, model.YBounds,
+        //        result.Item1, result.Item2, result.Item3));
+        //}
     }
 }

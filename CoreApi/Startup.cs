@@ -21,7 +21,7 @@
             var container = new Container();
 
             container.RegisterWebApiRequest<IFlowProblemSolver, SphereIdealFluidFlowProblemSolver>();
-            container.RegisterWebApiRequest<IFlowFunctionPointGenerator, SphereIdealFluidFlowFunctionPointGenerator>();
+            container.RegisterWebApiRequest<IFlowFunctionPointGenerator, FunctionPointGenerator>();
             container.RegisterSingle<IIntegrationService, GaussIntegrationService>();
             container.RegisterSingle<ICoordinateFunctionsStore, MemoryCoordinateFunctionsStore>();
 

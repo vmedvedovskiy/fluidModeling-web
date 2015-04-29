@@ -101,14 +101,14 @@
 
                 for (int j = 0; j < coordFunctionsCount; ++j)
                 {
-                    var cylinderPart = A(omega(rr, zz) * coordFunctions[(int)i](rr, zz), rr, zz) * omega(rr, zz) * coordFunctions[(int)j](rr, zz);
+                    var cylinderPart = A(coordFunctions[(int)i](rr, zz), rr, zz) * coordFunctions[(int)j](rr, zz);
 
                     var spherePart = A(coordFunctions[(int)i](ro, phi), ro, phi) * coordFunctions[(int)j](ro, phi);
 
                     matrix[(int)i, (int)j] = await integrationService.Integrate(
-                        cylinderPart, 10, rr, zz, xBounds, yBounds);
-                        // - await integrationService.Integrate(
-                        //spherePart, 10, ro, phi, roBounds, phiBounds);
+                        cylinderPart, 10, rr, zz, xBounds, yBounds)
+                         - await integrationService.Integrate(
+                        spherePart, 10, ro, phi, roBounds, phiBounds);
                 }
 
                 rightPart[i] = await integrationService.Integrate(right, 10, rr, zz, xBounds, yBounds);

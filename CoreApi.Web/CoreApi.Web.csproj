@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="libs\d3.geom.contour.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -65,9 +66,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="graph3d.js" />
+    <Content Include="libs\d3.js" />
+    <Content Include="libs\graph3d.js" />
     <Content Include="index.html" />
-    <Content Include="jquery.js" />
+    <Content Include="libs\jquery.js" />
     <Content Include="main.js" />
     <Content Include="styles.css" />
     <Content Include="Web.config" />

@@ -8,5 +8,8 @@
     {
         Task<IEnumerable<Point>> Generate(double step, Boundary xBounds, Boundary yBounds, 
             Function f, Variable x, Variable y);
+
+        Task<IEnumerable<Point>> GenerateContour(double step, double[] levels, Boundary xBounds, Boundary yBounds,
+            Function f, Variable x, Variable y);
     }
 }
